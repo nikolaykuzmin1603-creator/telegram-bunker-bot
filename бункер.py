@@ -2,6 +2,7 @@ import asyncio
 import logging
 import random
 import os
+import time
 from typing import Dict, List, Optional
 from enum import Enum, auto
 from threading import Thread
@@ -673,6 +674,8 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
 # ==================== ТОЧКА ВХОДА ====================
 def main() -> None:
     """Запуск бота"""
+    import time  # Добавьте этот импорт в начало файла, если его нет
+
     app_bot = Application.builder().token(TOKEN).build()
 
     async def error_handler(update: object, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -694,11 +697,11 @@ def main() -> None:
     else:
         asyncio.create_task(set_menu(app_bot))
 
+    # Запуск Flask в отдельном потоке
     Thread(target=run_web, daemon=True).start()
+
+    # ДАЁМ FLASK ВРЕМЯ ЗАПУСТИТЬСЯ (важно для Render!)
+    time.sleep(3)
 
     print("🤖 Бот запущен...")
     app_bot.run_polling(allowed_updates=Update.ALL_TYPES)
-
-
-if __name__ == "__main__":
-    main()
