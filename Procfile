@@ -1,1 +1,1 @@
-worker: python бункер.py
+web: python бункер.py
